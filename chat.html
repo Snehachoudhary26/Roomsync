@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>RoomSync — Messages</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=DM+Sans:wght@300;400;500;700&display=swap');
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{--rose:#f66b8c;--rose-light:#fdf0f3;--rose-border:rgba(232,56,90,0.2);--ink:#1a1410;--ink2:#4a4540;--ink3:#9a9590;--white:#fff;--off:#f7f5f2;--border:#e8e4df;--green:#22c55e;}
+html,body{height:100%;overflow:hidden;font-family:'DM Sans',sans-serif;color:var(--ink);font-size:16px}
+.top-nav{height:64px;background:#fff;border-bottom:1px solid var(--border);padding:0 52px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.nav-logo{font-family:'Playfair Display',serif;font-size:22px;font-style:italic;font-weight:700;color:var(--ink);text-decoration:none;display:flex;align-items:center;gap:8px;}
+.logo-dot{width:9px;height:9px;border-radius:50%;background:var(--rose);display:inline-block}
+.nav-links{display:flex;gap:36px;list-style:none}
+.nav-links a{color:var(--ink2);text-decoration:none;font-size:15px;font-weight:500;transition:color 0.2s}
+.nav-links a:hover{color:var(--ink)}
+.nav-links a.on{color:var(--rose);font-weight:700}
+.nav-r{display:flex;gap:12px;align-items:center}
+.btn-outline{background:none;border:1.5px solid var(--border);color:var(--ink2);padding:10px 22px;border-radius:50px;font-size:14px;font-weight:500;font-family:'DM Sans',sans-serif;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:6px;transition:all 0.2s}
+.btn-outline:hover{border-color:var(--ink);color:var(--ink)}
+.btn-rose{background:var(--rose);border:none;color:#fff;padding:11px 24px;border-radius:50px;font-size:14px;font-weight:700;font-family:'DM Sans',sans-serif;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;transition:all 0.2s}
+.btn-rose:hover{background:#d02e4a}
+.shell{display:grid;grid-template-columns:300px 1fr;height:calc(100vh - 64px);overflow:hidden;background:#fff;}
+.sidebar{border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
+.s-head{padding:20px 22px;border-bottom:1px solid var(--border);flex-shrink:0}
+.s-title{font-family:'Playfair Display',serif;font-size:20px;font-style:italic;font-weight:700;color:var(--ink);margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;}
+.new-btn{background:var(--rose);border:none;color:#fff;width:28px;height:28px;border-radius:50%;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-style:normal;font-family:'DM Sans',sans-serif;line-height:1;transition:all 0.2s}
+.new-btn:hover{background:#d02e4a;transform:scale(1.1)}
+.s-search{display:flex;align-items:center;gap:8px;background:var(--off);border:1px solid var(--border);border-radius:12px;padding:10px 14px}
+.s-search input{border:none;background:none;outline:none;font-size:15px;color:var(--ink);font-family:'DM Sans',sans-serif;width:100%}
+.s-search input::placeholder{color:var(--ink3)}
+.s-label{padding:14px 22px 6px;font-size:12px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:0.1em}
+.convo-list{flex:1;overflow-y:auto}
+.convo{display:flex;align-items:center;gap:12px;padding:14px 22px;cursor:pointer;border-bottom:1px solid var(--border);transition:background 0.15s}
+.convo:hover{background:var(--off)}
+.convo.active{background:var(--rose-light);border-left:3px solid var(--rose)}
+.convo.active .c-name{color:var(--rose)}
+.c-avi{position:relative;flex-shrink:0}
+.c-avi img{width:46px;height:46px;border-radius:50%;object-fit:cover;border:2px solid var(--border)}
+.ai-circle{width:46px;height:46px;border-radius:50%;background:var(--rose);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:#fff}
+.ondot{position:absolute;bottom:1px;right:1px;width:11px;height:11px;border-radius:50%;background:var(--green);border:2.5px solid #fff}
+.c-info{flex:1;min-width:0}
+.c-name{font-size:15px;font-weight:700;color:var(--ink);display:flex;align-items:center;gap:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.c-pill{font-size:11px;font-weight:700;color:var(--rose);background:var(--rose-light);border:1px solid var(--rose-border);padding:2px 7px;border-radius:20px;flex-shrink:0}
+.ai-pill{background:var(--rose);color:#fff;font-size:11px;font-weight:700;padding:2px 7px;border-radius:20px;flex-shrink:0}
+.c-preview{font-size:13px;color:var(--ink3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:3px}
+.c-meta{display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0}
+.c-time{font-size:12px;color:var(--ink3)}
+.ubadge{background:var(--rose);color:#fff;font-size:11px;font-weight:700;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.main{display:flex;flex-direction:column;overflow:hidden;background:var(--off)}
+.m-head{background:#fff;border-bottom:1px solid var(--border);padding:16px 24px;display:flex;align-items:center;gap:14px;flex-shrink:0}
+.m-avi{position:relative;flex-shrink:0;cursor:pointer}
+.m-avi img{width:50px;height:50px;border-radius:50%;object-fit:cover;border:2px solid var(--border);transition:border-color 0.2s}
+.m-avi:hover img{border-color:var(--rose)}
+.m-ondot{position:absolute;bottom:1px;right:1px;width:12px;height:12px;border-radius:50%;background:var(--green);border:2.5px solid #fff}
+.m-info{flex:1;cursor:pointer}
+.m-name{font-size:18px;font-weight:700;color:var(--ink)}
+.m-status{font-size:14px;color:var(--green);font-weight:500;margin-top:2px}
+.m-actions{display:flex;gap:12px;align-items:center}
+
+/* ── BIGGER ICON BUTTONS ── */
+.icon-btn{
+  width:48px;height:48px;border-radius:50%;
+  border:1.5px solid var(--border);background:#fff;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;font-size:22px;
+  transition:all 0.2s;color:var(--ink2);
+}
+.icon-btn:hover{border-color:var(--rose);color:var(--rose);background:var(--rose-light)}
+
+.ai-btn{background:var(--off);border:1.5px solid var(--border);color:var(--ink2);padding:11px 20px;border-radius:50px;font-size:15px;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all 0.2s}
+.ai-btn:hover{border-color:var(--rose);color:var(--rose)}
+.share-btn{background:var(--rose);border:none;color:#fff;padding:11px 22px;border-radius:50px;font-size:15px;font-weight:700;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all 0.2s}
+.share-btn:hover{background:#d02e4a}
+
+.privacy-bar{background:#fffbeb;border-bottom:1px solid #fde68a;padding:10px 24px;display:flex;align-items:center;gap:10px;font-size:14px;color:#92400e;flex-shrink:0}
+.privacy-bar strong{font-weight:700}
+.dismiss-btn{background:none;border:1px solid #fde68a;color:#92400e;padding:5px 12px;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap;flex-shrink:0;margin-left:auto}
+.msgs{flex:1;padding:20px 24px;display:flex;flex-direction:column;gap:12px;overflow-y:auto}
+.date-div{text-align:center;font-size:13px;color:var(--ink3);display:flex;align-items:center;gap:12px;margin:6px 0}
+.date-div::before,.date-div::after{content:'';flex:1;height:1px;background:var(--border)}
+.mg{display:flex;flex-direction:column;gap:4px}
+.mg.mine{align-items:flex-end}
+.mg.theirs,.mg.ai-msg{align-items:flex-start}
+.brow{display:flex;align-items:flex-end;gap:8px}
+.brow.mine{flex-direction:row-reverse}
+.sm-avi{width:32px;height:32px;border-radius:50%;object-fit:cover;flex-shrink:0}
+.ai-avi{width:32px;height:32px;border-radius:50%;background:var(--rose);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff;flex-shrink:0}
+.bub{max-width:62%;padding:12px 16px;font-size:15px;line-height:1.6;border-radius:18px;}
+.mine .bub{background:var(--rose);color:#fff;border-bottom-right-radius:4px}
+.theirs .bub{background:#fff;color:var(--ink);border:1px solid var(--border);border-bottom-left-radius:4px}
+.ai-msg .bub{background:#fff;color:var(--ink);border:1.5px solid var(--rose-border);border-bottom-left-radius:4px;font-size:14px}
+.ai-label{font-size:12px;font-weight:700;color:var(--rose);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px;padding-left:2px}
+.mtime{font-size:12px;color:var(--ink3);padding:0 4px}
+.contact-card{background:#fff;border:1.5px solid var(--rose-border);border-radius:16px;padding:18px 20px;max-width:260px}
+.cc-head{font-size:13px;font-weight:700;color:var(--rose);margin-bottom:10px;text-transform:uppercase;letter-spacing:0.06em}
+.cc-row{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--ink2);margin-bottom:6px}
+.cc-val{font-weight:700;color:var(--ink)}
+.cc-accept{width:100%;margin-top:12px;background:var(--rose);border:none;color:#fff;padding:10px;border-radius:10px;font-size:14px;font-weight:700;font-family:'DM Sans',sans-serif;cursor:pointer;transition:background 0.2s}
+.cc-accept:hover{background:#d02e4a}
+.typing{display:flex;align-items:center;gap:8px;padding:4px 0}
+.tdots{display:flex;gap:4px}
+.tdot{width:7px;height:7px;border-radius:50%;background:var(--ink3);animation:tb 1.2s infinite}
+.tdot:nth-child(2){animation-delay:0.2s}
+.tdot:nth-child(3){animation-delay:0.4s}
+@keyframes tb{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-5px)}}
+.input-area{background:#fff;border-top:1px solid var(--border);padding:16px 24px;display:flex;gap:10px;align-items:center;flex-shrink:0}
+.input-wrap{flex:1;background:var(--off);border:1.5px solid var(--border);border-radius:50px;padding:12px 20px;display:flex;align-items:center;transition:border-color 0.2s}
+.input-wrap:focus-within{border-color:var(--rose)}
+.input-wrap input{border:none;background:none;outline:none;font-size:15px;color:var(--ink);font-family:'DM Sans',sans-serif;width:100%}
+.input-wrap input::placeholder{color:var(--ink3)}
+.send-btn{width:46px;height:46px;border-radius:50%;background:var(--rose);border:none;color:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s;flex-shrink:0}
+.send-btn:hover{background:#d02e4a;transform:scale(1.05)}
+
+/* ── BIGGER AI PANEL ── */
+.ai-panel{
+  display:none;flex-direction:column;
+  width:360px;
+  border-left:1px solid var(--border);background:#fff;overflow:hidden;flex-shrink:0;
+  box-shadow:-4px 0 20px rgba(0,0,0,0.06);
+}
+.ai-panel.open{display:flex}
+.ai-p-head{
+  padding:20px 24px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;flex-shrink:0;
+  background:var(--rose-light);
+}
+.ai-p-title{font-size:18px;font-weight:700;color:var(--ink);display:flex;align-items:center;gap:10px}
+.ai-dot{width:10px;height:10px;border-radius:50%;background:var(--rose);animation:p3 2s infinite}
+@keyframes p3{0%,100%{opacity:1}50%{opacity:0.4}}
+.close-ai{background:none;border:1.5px solid var(--border);color:var(--ink3);font-size:18px;cursor:pointer;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;transition:all 0.2s}
+.close-ai:hover{border-color:var(--rose);color:var(--rose)}
+.ai-msgs{flex:1;padding:20px;display:flex;flex-direction:column;gap:12px;overflow-y:auto}
+.ai-chip{
+  background:var(--off);border:1px solid var(--border);border-radius:12px;
+  padding:14px 16px;font-size:15px;color:var(--ink2);
+  cursor:pointer;transition:all 0.2s;font-family:'DM Sans',sans-serif;
+  text-align:left;width:100%;line-height:1.5;font-weight:500;
+}
+.ai-chip:hover{border-color:var(--rose);color:var(--rose);background:var(--rose-light)}
+.ai-bubble{
+  background:var(--rose-light);border:1px solid var(--rose-border);
+  border-radius:14px;padding:16px 18px;font-size:15px;
+  color:var(--ink2);line-height:1.7;
+}
+.ai-bubble strong{color:var(--ink);font-weight:700}
+.ai-q{
+  background:var(--off);border:1px solid var(--border);border-radius:12px;
+  padding:12px 16px;font-size:15px;color:var(--ink2);text-align:right;
+}
+.ai-input-row{padding:18px 20px;border-top:1px solid var(--border);display:flex;gap:10px;flex-shrink:0;background:#fff;}
+.ai-input{
+  flex:1;border:1.5px solid var(--border);border-radius:12px;
+  padding:12px 16px;font-size:15px;font-family:'DM Sans',sans-serif;
+  outline:none;color:var(--ink);
+}
+.ai-input:focus{border-color:var(--rose)}
+.ai-input::placeholder{color:var(--ink3)}
+.ai-send{
+  background:var(--rose);border:none;color:#fff;
+  width:44px;height:44px;border-radius:12px;cursor:pointer;
+  font-size:18px;display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;transition:all 0.2s;
+}
+.ai-send:hover{background:#d02e4a}
+
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:500;align-items:center;justify-content:center}
+.modal-overlay.open{display:flex}
+.modal-box{background:#fff;border-radius:20px;padding:32px;width:100%;max-width:400px;box-shadow:0 20px 60px rgba(0,0,0,0.2)}
+.modal-title{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--ink);margin-bottom:6px}
+.modal-sub{font-size:14px;color:var(--ink3);margin-bottom:20px}
+.modal-search{display:flex;align-items:center;gap:8px;background:var(--off);border:1.5px solid var(--border);border-radius:12px;padding:12px 16px;margin-bottom:16px}
+.modal-search input{border:none;background:none;outline:none;font-size:15px;color:var(--ink);font-family:'DM Sans',sans-serif;width:100%}
+.modal-people{display:flex;flex-direction:column;gap:8px}
+.modal-person{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:12px;cursor:pointer;transition:background 0.15s}
+.modal-person:hover{background:var(--rose-light)}
+.modal-person img{width:42px;height:42px;border-radius:50%;object-fit:cover;border:2px solid var(--border)}
+.modal-person-info{flex:1}
+.modal-person-name{font-size:15px;font-weight:700;color:var(--ink)}
+.modal-person-meta{font-size:12px;color:var(--ink3);margin-top:2px}
+.modal-person-score{font-size:12px;font-weight:700;color:var(--rose);background:var(--rose-light);border:1px solid var(--rose-border);padding:3px 9px;border-radius:20px}
+.modal-close{width:100%;margin-top:16px;padding:12px;border:1.5px solid var(--border);background:none;border-radius:12px;font-size:14px;font-weight:600;color:var(--ink2);font-family:'DM Sans',sans-serif;cursor:pointer;transition:all 0.2s}
+.modal-close:hover{border-color:var(--ink);color:var(--ink)}
+</style>
+</head>
+<body>
+
+<nav class="top-nav">
+  <a class="nav-logo" href="index.html"><span class="logo-dot"></span> RoomSync</a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="matches.html">Matches</a></li>
+    <li><a href="chat.html" class="on">Messages</a></li>
+    <li><a href="quiz.html">Quiz</a></li>
+  </ul>
+  <div class="nav-r">
+    <a href="matches.html" class="btn-outline">&#8592; Back to Matches</a>
+    <a href="signup.html#login" class="btn-rose">My Profile</a>
+  </div>
+</nav>
+
+<div class="shell">
+  <div class="sidebar">
+    <div class="s-head">
+      <div class="s-title">
+        Messages
+        <button class="new-btn" onclick="openNewMsg()" title="Start new conversation">+</button>
+      </div>
+      <div class="s-search">
+        <span style="color:var(--ink3);font-size:16px">&#9906;</span>
+        <input type="text" id="search-input" placeholder="Search conversations..." oninput="filterConvos(this.value)"/>
+      </div>
+    </div>
+
+    <div class="s-label">AI Assistant</div>
+    <div class="convo-list" id="convo-list">
+      <div class="convo" data-id="ai" onclick="openAI()">
+        <div class="c-avi"><div class="ai-circle">AI</div></div>
+        <div class="c-info">
+          <div class="c-name">RoomSync AI <span class="ai-pill">Smart</span></div>
+          <div class="c-preview">Ask me about your matches</div>
+        </div>
+      </div>
+
+      <div class="s-label" style="padding-top:10px">Messages</div>
+
+      <div class="convo active" data-id="arjun" onclick="switchChat('arjun')">
+        <div class="c-avi"><img src="https://as1.ftcdn.net/v2/jpg/05/71/80/16/1000_F_571801619_HxaQv1mlrJ0xzpywSy8WB8ejO8b57ocu.jpg" alt="Arjun"/><div class="ondot"></div></div>
+        <div class="c-info">
+          <div class="c-name">Arjun Saxena. <span class="c-pill">87%</span></div>
+          <div class="c-preview" id="preview-arjun">See you Saturday at 11!</div>
+        </div>
+        <div class="c-meta"><div class="c-time">10:32</div></div>
+      </div>
+
+      <div class="convo" data-id="priya" onclick="switchChat('priya')">
+        <div class="c-avi"><img src="https://as2.ftcdn.net/jpg/08/04/25/17/1000_F_804251784_CwWPJKZGwfuuCvkxKKnpN22PaevtnOQ6.jpg" alt="Priya"/><div class="ondot"></div></div>
+        <div class="c-info">
+          <div class="c-name">Priya Mishra. <span class="c-pill">91%</span></div>
+          <div class="c-preview" id="preview-priya">Are you vegetarian?</div>
+        </div>
+        <div class="c-meta"><div class="c-time">9:15</div><div class="ubadge">2</div></div>
+      </div>
+
+      <div class="convo" data-id="rahul" onclick="switchChat('rahul')">
+        <div class="c-avi"><img src="https://as1.ftcdn.net/jpg/04/80/36/22/1000_F_480362275_jxY4P8sDTsDQHMJILSSS6iyRNxsqpln4.jpg" alt="Rahul"/></div>
+        <div class="c-info">
+          <div class="c-name">Rahul Shrivastava. <span class="c-pill">85%</span></div>
+          <div class="c-preview" id="preview-rahul">Let me know when free</div>
+        </div>
+        <div class="c-meta"><div class="c-time">Yesterday</div></div>
+      </div>
+
+      <div class="convo" data-id="ruhi" onclick="switchChat('ruhi')">
+        <div class="c-avi"><img src="https://as2.ftcdn.net/jpg/05/23/12/85/1000_F_523128514_dg8XGU1HWmeV9PbqzSrHxGv0tqcud11e.jpg" alt="Ruhi"/></div>
+        <div class="c-info">
+          <div class="c-name">Ruhi Verma. <span class="c-pill">79%</span></div>
+          <div class="c-preview" id="preview-ruhi">I have a cat, is that okay?</div>
+        </div>
+        <div class="c-meta"><div class="c-time">Mon</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="m-head">
+      <div class="m-avi" onclick="window.location.href='matches.html'" title="View profile">
+        <img id="hImg" src="https://as1.ftcdn.net/v2/jpg/05/71/80/16/1000_F_571801619_HxaQv1mlrJ0xzpywSy8WB8ejO8b57ocu.jpg" alt="user"/>
+        <div class="m-ondot"></div>
+      </div>
+      <div class="m-info" onclick="window.location.href='matches.html'" title="View profile">
+        <div class="m-name" id="hName">Arjun Saxena.</div>
+        <div class="m-status">Online now &nbsp;·&nbsp; <span id="hScore" style="color:var(--rose);font-weight:700">87% match</span></div>
+      </div>
+      <div class="m-actions">
+        <button class="icon-btn" onclick="window.location.href='matches.html'" title="View profile">&#128100;</button>
+        <button class="icon-btn" onclick="alert('Voice calling coming soon! Share contact details to connect.')" title="Call">&#128222;</button>
+        <button class="icon-btn" onclick="alert('Video calling coming soon!')" title="Video call">&#127909;</button>
+        <button class="ai-btn" onclick="toggleAI()">&#129302; Ask AI</button>
+        <button class="share-btn" onclick="showContact()">Share Contact</button>
+      </div>
+    </div>
+
+    <div class="privacy-bar" id="privacy-bar">
+      <span style="font-size:18px">&#128274;</span>
+      <span style="flex:1"><strong>Privacy Protected:</strong> Contact info is hidden until both agree to share. Click "Share Contact" when ready.</span>
+      <button class="dismiss-btn" onclick="this.parentElement.style.display='none'">Got it</button>
+    </div>
+
+    <div class="msgs" id="msgs"></div>
+
+    <div class="input-area">
+      <div class="input-wrap">
+        <input type="text" id="msg-input" placeholder="Type a message..." onkeydown="if(event.key==='Enter')sendMsg()"/>
+      </div>
+      <button class="send-btn" onclick="sendMsg()" title="Send message">&#10148;</button>
+    </div>
+  </div>
+
+  <div class="ai-panel" id="ai-panel">
+    <div class="ai-p-head">
+      <div class="ai-p-title"><div class="ai-dot"></div> RoomSync AI</div>
+      <button class="close-ai" onclick="toggleAI()" title="Close AI panel">&#10005;</button>
+    </div>
+    <div class="ai-msgs" id="ai-msgs">
+      <div class="ai-bubble"><strong>Hi! I'm your RoomSync AI.</strong> I can help you decide if this match is right for you. Try asking one of the questions below or type your own:</div>
+      <button class="ai-chip" onclick="askAI('Are we compatible long term?')">Are we compatible long term?</button>
+      <button class="ai-chip" onclick="askAI('What to ask before moving in?')">What to ask before moving in?</button>
+      <button class="ai-chip" onclick="askAI('Is it safe to share contact?')">Is it safe to share contact?</button>
+      <button class="ai-chip" onclick="askAI('What are red flags to watch for?')">What are red flags to watch for?</button>
+    </div>
+    <div class="ai-input-row">
+      <input class="ai-input" id="ai-input" type="text" placeholder="Ask AI anything..." onkeydown="if(event.key==='Enter')askAI()"/>
+      <button class="ai-send" onclick="askAI()">&#10148;</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="new-msg-modal" onclick="if(event.target===this)closeNewMsg()">
+  <div class="modal-box">
+    <div class="modal-title">New Message</div>
+    <div class="modal-sub">Start a conversation with one of your matches</div>
+    <div class="modal-search">
+      <span style="color:var(--ink3)">&#9906;</span>
+      <input type="text" placeholder="Search your matches..." oninput="filterModal(this.value)"/>
+    </div>
+    <div class="modal-people" id="modal-people">
+      <div class="modal-person" onclick="switchChat('arjun');closeNewMsg()">
+        <img src="https://as1.ftcdn.net/v2/jpg/05/71/80/16/1000_F_571801619_HxaQv1mlrJ0xzpywSy8WB8ejO8b57ocu.jpg" alt="Arjun"/>
+        <div class="modal-person-info"><div class="modal-person-name">Arjun Saxena</div><div class="modal-person-meta">Indore · Student</div></div>
+        <div class="modal-person-score">87%</div>
+      </div>
+      <div class="modal-person" onclick="switchChat('priya');closeNewMsg()">
+        <img src="https://as2.ftcdn.net/jpg/08/04/25/17/1000_F_804251784_CwWPJKZGwfuuCvkxKKnpN22PaevtnOQ6.jpg" alt="Priya"/>
+        <div class="modal-person-info"><div class="modal-person-name">Priya Mishra</div><div class="modal-person-meta">Mumbai · Working professional</div></div>
+        <div class="modal-person-score">91%</div>
+      </div>
+      <div class="modal-person" onclick="switchChat('rahul');closeNewMsg()">
+        <img src="https://as1.ftcdn.net/jpg/04/80/36/22/1000_F_480362275_jxY4P8sDTsDQHMJILSSS6iyRNxsqpln4.jpg" alt="Rahul"/>
+        <div class="modal-person-info"><div class="modal-person-name">Rahul Shrivastava</div><div class="modal-person-meta">Pune · Student</div></div>
+        <div class="modal-person-score">85%</div>
+      </div>
+      <div class="modal-person" onclick="switchChat('ruhi');closeNewMsg()">
+        <img src="https://as2.ftcdn.net/jpg/05/23/12/85/1000_F_523128514_dg8XGU1HWmeV9PbqzSrHxGv0tqcud11e.jpg" alt="Ruhi"/>
+        <div class="modal-person-info"><div class="modal-person-name">Ruhi Verma</div><div class="modal-person-meta">Hyderabad · Freelancer</div></div>
+        <div class="modal-person-score">79%</div>
+      </div>
+    </div>
+    <button class="modal-close" onclick="closeNewMsg()">Cancel</button>
+  </div>
+</div>
+
+<script>
+const people = {
+  arjun:{name:'Arjun Saxena.',score:'87%',img:'https://as1.ftcdn.net/v2/jpg/05/71/80/16/1000_F_571801619_HxaQv1mlrJ0xzpywSy8WB8ejO8b57ocu.jpg',online:true,contact:{phone:'+91 98765 43210',email:'arjun.saxena@gmail.com',location:'HSR Layout, Bangalore'}},
+  priya:{name:'Priya Mishra.',score:'91%',img:'https://as2.ftcdn.net/jpg/08/04/25/17/1000_F_804251784_CwWPJKZGwfuuCvkxKKnpN22PaevtnOQ6.jpg',online:true,contact:{phone:'+91 87654 32109',email:'priya.mishra@gmail.com',location:'Andheri West, Mumbai'}},
+  rahul:{name:'Rahul Shrivastava.',score:'85%',img:'https://as1.ftcdn.net/jpg/04/80/36/22/1000_F_480362275_jxY4P8sDTsDQHMJILSSS6iyRNxsqpln4.jpg',online:false,contact:{phone:'+91 76543 21098',email:'rahul.s@gmail.com',location:'Koregaon Park, Pune'}},
+  ruhi:{name:'Ruhi Verma.',score:'79%',img:'https://as2.ftcdn.net/jpg/05/23/12/85/1000_F_523128514_dg8XGU1HWmeV9PbqzSrHxGv0tqcud11e.jpg',online:false,contact:{phone:'+91 65432 10987',email:'ruhi.verma@gmail.com',location:'Gachibowli, Hyderabad'}}
+};
+
+const defaultMessages = {
+  arjun:[
+    {type:'date',text:'Today'},
+    {type:'theirs',text:"Hey! I saw your profile on RoomSync. We're 87% compatible — that's really high!",time:'10:22 AM'},
+    {type:'mine',text:'Hi Arjun! Your sleep schedule matches mine perfectly!',time:'10:24 AM'},
+    {type:'theirs',text:'Night owls unite! Are you still looking in Bangalore?',time:'10:25 AM'},
+    {type:'mine',text:'Yes! HSR Layout or Koramangala. Budget around 12–14k. You?',time:'10:27 AM'},
+    {type:'theirs',text:'Same! I have a 2BHK shortlisted in HSR. Want to visit this Saturday?',time:'10:29 AM'},
+    {type:'ai',text:'You both seem very compatible. Ready to share contact details to schedule a visit?'},
+    {type:'mine',text:'Saturday works! What time?',time:'10:31 AM'},
+  ],
+  priya:[
+    {type:'date',text:'Today'},
+    {type:'theirs',text:'Hi! I matched with you on RoomSync. 91% is amazing!',time:'9:10 AM'},
+    {type:'mine',text:'Hey Priya! Yes I noticed too. Are you vegetarian?',time:'9:12 AM'},
+    {type:'theirs',text:'Yes strictly vegetarian! Are you?',time:'9:13 AM'},
+    {type:'mine',text:'Yes same! That makes us even more compatible.',time:'9:14 AM'},
+    {type:'theirs',text:'Are you vegetarian?',time:'9:15 AM'},
+    {type:'ai',text:'Priya and you share cleanliness and food preferences — great signs for compatibility!'},
+  ],
+  rahul:[
+    {type:'date',text:'Yesterday'},
+    {type:'theirs',text:'Hey! Saw your profile. We have 85% match score!',time:'6:00 PM'},
+    {type:'mine',text:'Hey Rahul! Yeah that is pretty high. Which city are you in?',time:'6:05 PM'},
+    {type:'theirs',text:'Pune — Koregaon Park area. You?',time:'6:07 PM'},
+    {type:'mine',text:'Nice! I am also looking around Pune. Let me know when free to talk.',time:'6:10 PM'},
+    {type:'theirs',text:'Let me know when free',time:'6:12 PM'},
+  ],
+  ruhi:[
+    {type:'date',text:'Monday'},
+    {type:'theirs',text:'Hi there! We matched on RoomSync. I have a quick question.',time:'11:00 AM'},
+    {type:'mine',text:'Hi Ruhi! Sure go ahead.',time:'11:02 AM'},
+    {type:'theirs',text:'I have a cat, is that okay?',time:'11:03 AM'},
+    {type:'ai',text:'Ruhi has a pet. Check your compatibility on lifestyle preferences before responding.'},
+  ]
+};
+
+let currentChat='arjun';
+let chatHistories=JSON.parse(JSON.stringify(defaultMessages));
+
+function renderMessages(id){
+  const person=people[id];
+  const msgs=document.getElementById('msgs');
+  const history=chatHistories[id]||[];
+  msgs.innerHTML=history.map(m=>{
+    if(m.type==='date') return `<div class="date-div">${m.text}</div>`;
+    if(m.type==='mine') return `<div class="mg mine"><div class="brow mine"><div class="bub">${m.text}</div></div><div class="mtime">${m.time||'Just now'}</div></div>`;
+    if(m.type==='theirs') return `<div class="mg theirs"><div class="brow"><img class="sm-avi" src="${person.img}" alt="${person.name}"/><div class="bub">${m.text}</div></div><div class="mtime">${m.time||''}</div></div>`;
+    if(m.type==='ai') return `<div class="mg ai-msg"><div class="ai-label">&#129302; RoomSync AI</div><div class="brow"><div class="ai-avi">AI</div><div class="bub">${m.text}</div></div></div>`;
+    if(m.type==='contact') return `<div class="mg theirs"><div class="brow"><img class="sm-avi" src="${person.img}" alt="${person.name}"/><div><div class="contact-card"><div class="cc-head">&#128100; Contact Details Shared</div><div class="cc-row"><span>&#128222;</span><span class="cc-val">${person.contact.phone}</span></div><div class="cc-row"><span>&#9993;</span><span class="cc-val">${person.contact.email}</span></div><div class="cc-row"><span>&#128205;</span><span class="cc-val">${person.contact.location}</span></div><button class="cc-accept" onclick="this.textContent='Contact Saved ✓';this.style.background='#22c55e';this.disabled=true">Accept &amp; Save Contact &#10003;</button></div></div></div></div>`;
+    return '';
+  }).join('');
+  msgs.scrollTop=msgs.scrollHeight;
+}
+
+function switchChat(id){
+  currentChat=id;
+  const person=people[id];
+  document.getElementById('hName').textContent=person.name;
+  document.getElementById('hImg').src=person.img;
+  document.querySelector('.m-status').innerHTML=person.online
+    ?`Online now &nbsp;·&nbsp; <span id="hScore" style="color:var(--rose);font-weight:700">${person.score} match</span>`
+    :`Last seen recently &nbsp;·&nbsp; <span id="hScore" style="color:var(--rose);font-weight:700">${person.score} match</span>`;
+  document.querySelectorAll('.convo[data-id]').forEach(c=>c.classList.remove('active'));
+  const activeConvo=document.querySelector(`.convo[data-id="${id}"]`);
+  if(activeConvo){activeConvo.classList.add('active');const ub=activeConvo.querySelector('.ubadge');if(ub)ub.remove();}
+  renderMessages(id);
+}
+
+function sendMsg(){
+  const input=document.getElementById('msg-input');
+  const text=input.value.trim();
+  if(!text)return;
+  if(!chatHistories[currentChat])chatHistories[currentChat]=[];
+  chatHistories[currentChat].push({type:'mine',text,time:'Just now'});
+  const prev=document.getElementById('preview-'+currentChat);
+  if(prev)prev.textContent=text;
+  input.value='';
+  renderMessages(currentChat);
+}
+
+function showContact(){
+  if(!chatHistories[currentChat])chatHistories[currentChat]=[];
+  chatHistories[currentChat].push({type:'contact'});
+  renderMessages(currentChat);
+}
+
+function filterConvos(val){
+  const v=val.toLowerCase();
+  document.querySelectorAll('.convo[data-id]').forEach(c=>{
+    const name=c.querySelector('.c-name')?c.querySelector('.c-name').textContent.toLowerCase():'';
+    c.style.display=name.includes(v)?'flex':'none';
+  });
+}
+
+function openNewMsg(){document.getElementById('new-msg-modal').classList.add('open')}
+function closeNewMsg(){document.getElementById('new-msg-modal').classList.remove('open')}
+function filterModal(val){
+  const v=val.toLowerCase();
+  document.querySelectorAll('.modal-person').forEach(p=>{
+    const n=p.querySelector('.modal-person-name').textContent.toLowerCase();
+    p.style.display=n.includes(v)?'flex':'none';
+  });
+}
+
+const aiR={
+  'Are we compatible long term?':'Based on your quiz vectors, you share <strong>sleep habits (92%)</strong>, <strong>cleanliness (95%)</strong>, and <strong>work style (88%)</strong> — the top 3 factors for long-term compatibility. Social habits differ slightly (78%) — worth a chat before moving in.',
+  'What to ask before moving in?':'1. <strong>What time do you sleep and wake?</strong><br>2. <strong>How often do you invite guests?</strong><br>3. <strong>How do we split cleaning?</strong><br>4. <strong>Are visitors/partners okay?</strong><br>5. <strong>What is your noise tolerance?</strong>',
+  'Is it safe to share contact?':'This person is <strong>verified</strong> with a college ID. You have exchanged multiple messages. It looks safe — click <strong>Share Contact</strong> in the top right when ready.',
+  'What are red flags to watch for?':'1. Avoids answering direct questions<br>2. Wants to move in immediately<br>3. Asks for money before meeting<br>4. Inconsistent answers<br>5. Gets defensive when asked for verification',
+};
+
+function toggleAI(){document.getElementById('ai-panel').classList.toggle('open')}
+function openAI(){document.getElementById('ai-panel').classList.add('open')}
+
+async function askAI(q){
+  const input=document.getElementById('ai-input');
+  const question=q||input.value.trim();
+  if(!question)return;
+  const msgs=document.getElementById('ai-msgs');
+  const qEl=document.createElement('div');
+  qEl.className='ai-q';qEl.textContent=question;
+  msgs.appendChild(qEl);
+  const aEl=document.createElement('div');
+  aEl.className='ai-bubble';
+
+  if(aiR[question]){
+    aEl.innerHTML=aiR[question];
+  } else {
+    aEl.textContent='Thinking...';
+    msgs.appendChild(aEl);
+    msgs.scrollTop=msgs.scrollHeight;
+    if(input)input.value='';
+    try{
+      const person=people[currentChat];
+      const res=await fetch('http://127.0.0.1:5000/api/auth/ai-chat',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({message:question,userName:person.name,matchScore:person.score})
+      });
+      const data=await res.json();
+      aEl.innerHTML=data.reply||'Based on your compatibility data, I recommend an in-person meeting before deciding!';
+    }catch(err){
+      aEl.innerHTML=aiR[question]||'Based on your compatibility data, I recommend an in-person meeting before deciding. Your match score is very promising!';
+    }
+    msgs.scrollTop=msgs.scrollHeight;
+    return;
+  }
+
+  msgs.appendChild(aEl);
+  msgs.scrollTop=msgs.scrollHeight;
+  if(input)input.value='';
+}
+
+switchChat('arjun');
+</script>
+</body>
+</html>
