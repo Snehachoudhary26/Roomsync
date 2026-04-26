@@ -348,7 +348,7 @@ async function handleSignup(){
   }
 
   try {
-    const res = await fetch('https://roomsync-production.railway.app/api/auth/signup', {
+    const res = await fetch('https://roomsync-fellow-mate.up.railway.app/api/auth/signup', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ firstName, lastName, email, phone, city, role, password })
@@ -377,7 +377,7 @@ async function handleLogin(){
   }
 
   try {
-    const res = await fetch('http://127.0.0.1:3000/api/auth/login', {
+    const res = await fetch('https://roomsync-fellow-mate.up.railway.app/api/auth/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password })
