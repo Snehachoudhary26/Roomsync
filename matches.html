@@ -1,220 +1,728 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>RoomSync — Your Matches</title>
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=DM+Sans:wght@300;400;500;700&display=swap');
-*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-:root{--rose:#f66b8c;--rose-light:#fdf0f3;--rose-border:rgba(232,56,90,0.2);--ink:#1a1410;--ink2:#4a4540;--ink3:#9a9590;--off:#f7f5f2;--border:#e8e4df;--green:#22c55e}
-body{font-family:'DM Sans',sans-serif;background:var(--off);color:var(--ink)}
-nav{display:flex;align-items:center;justify-content:space-between;padding:0 52px;height:64px;background:#fff;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100}
-.nav-logo{font-family:'Playfair Display',serif;font-size:22px;font-style:italic;font-weight:700;color:var(--ink);text-decoration:none;display:flex;align-items:center;gap:8px}
-.logo-dot{width:9px;height:9px;border-radius:50%;background:var(--rose);display:inline-block}
-.nav-links{display:flex;gap:36px;list-style:none}
-.nav-links a{color:var(--ink2);text-decoration:none;font-size:15px;font-weight:500;transition:color 0.2s}
-.nav-links a:hover{color:var(--ink)}
-.nav-links a.on{color:var(--rose);font-weight:700}
-.nav-r{display:flex;gap:10px;align-items:center}
-.btn-outline{background:none;border:1.5px solid var(--border);color:var(--ink2);padding:9px 20px;border-radius:50px;font-size:14px;font-weight:500;font-family:'DM Sans',sans-serif;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;transition:all 0.2s}
-.btn-outline:hover{border-color:var(--ink);color:var(--ink)}
-.btn-rose{background:var(--rose);border:none;color:#fff;padding:10px 22px;border-radius:50px;font-size:14px;font-weight:700;font-family:'DM Sans',sans-serif;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;transition:all 0.2s}
-.btn-rose:hover{background:#d02e4a}
-.page-hero{background:#fff;border-bottom:1px solid var(--border);padding:36px 52px}
-.hero-top{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:28px}
-.hero-label{font-size:12px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--rose);margin-bottom:8px}
-.hero-title{font-family:'Playfair Display',serif;font-size:clamp(28px,3.5vw,40px);font-weight:700;color:var(--ink);line-height:1.1}
-.hero-title em{font-style:italic;color:var(--rose)}
-.hero-stats{display:flex;gap:32px}
-.h-stat{text-align:center}
-.h-stat-n{font-family:'Playfair Display',serif;font-size:28px;font-weight:700;color:var(--ink)}
-.h-stat-n span{color:var(--rose)}
-.h-stat-l{font-size:12px;color:var(--ink3);margin-top:2px}
-.filters-bar{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-.filter-select{padding:9px 32px 9px 16px;border:1.5px solid var(--border);border-radius:50px;font-size:14px;font-family:'DM Sans',sans-serif;color:var(--ink);background:#fff;outline:none;cursor:pointer;transition:border-color 0.2s;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%239a9590' d='M6 8L1 3h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center}
-.filter-select:focus{border-color:var(--rose)}
-.filter-btn{padding:9px 18px;border:1.5px solid var(--border);border-radius:50px;font-size:14px;font-weight:500;font-family:'DM Sans',sans-serif;color:var(--ink2);background:#fff;cursor:pointer;transition:all 0.2s}
-.filter-btn:hover,.filter-btn.active{border-color:var(--rose);color:var(--rose);background:var(--rose-light)}
-.sort-btn{padding:9px 18px;border:1.5px solid var(--border);border-radius:50px;font-size:14px;font-weight:600;font-family:'DM Sans',sans-serif;color:var(--ink);background:#fff;cursor:pointer;transition:all 0.2s;margin-left:auto}
-.sort-btn:hover{border-color:var(--ink)}
-.results-count{font-size:14px;color:var(--ink3);font-weight:500;white-space:nowrap}
-.main-content{padding:36px 52px}
-.matches-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:24px}
-.match-card{background:#fff;border-radius:20px;overflow:hidden;border:1px solid var(--border);transition:all 0.3s ease;cursor:pointer;opacity:0;transform:translateY(20px);animation:cardIn 0.5s ease forwards}
-@keyframes cardIn{to{opacity:1;transform:translateY(0)}}
-.match-card:hover{transform:translateY(-6px);box-shadow:0 20px 40px rgba(0,0,0,0.08);border-color:rgba(232,56,90,0.2)}
-.card-photo{height:220px;overflow:hidden;position:relative}
-.card-photo img{width:100%;height:100%;object-fit:cover;transition:transform 0.6s ease}
-.match-card:hover .card-photo img{transform:scale(1.06)}
-.score-badge{position:absolute;top:14px;right:14px;background:var(--rose);color:#fff;border-radius:50px;padding:5px 12px;font-size:13px;font-weight:700}
-.score-badge.high{background:#16a34a}
-.online-badge{position:absolute;top:14px;left:14px;background:rgba(255,255,255,0.92);border-radius:50px;padding:5px 10px;font-size:11px;font-weight:700;color:#16a34a;display:flex;align-items:center;gap:5px}
-.online-dot{width:6px;height:6px;border-radius:50%;background:var(--green)}
-.verified-badge{position:absolute;bottom:14px;left:14px;background:rgba(255,255,255,0.92);border-radius:50px;padding:4px 10px;font-size:11px;font-weight:700;color:var(--ink2)}
-.card-body{padding:18px 20px}
-.card-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:6px}
-.card-name{font-size:17px;font-weight:700;color:var(--ink)}
-.card-age{font-size:13px;color:var(--ink3);margin-top:2px}
-.save-btn{background:none;border:1.5px solid var(--border);width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.2s;font-size:16px;flex-shrink:0}
-.save-btn:hover{border-color:var(--rose);background:var(--rose-light)}
-.save-btn.saved{border-color:var(--rose);background:var(--rose-light);color:var(--rose)}
-.card-meta{font-size:13px;color:var(--ink3);margin-bottom:12px;display:flex;align-items:center;gap:6px}
-.meta-dot{width:3px;height:3px;border-radius:50%;background:var(--ink3)}
-.compat-bars{margin-bottom:14px}
-.compat-row{display:flex;align-items:center;gap:8px;margin-bottom:5px}
-.compat-label{font-size:11px;color:var(--ink3);width:70px;flex-shrink:0;text-transform:uppercase;letter-spacing:0.04em}
-.compat-track{flex:1;height:4px;background:var(--off);border-radius:2px;overflow:hidden}
-.compat-fill{height:4px;border-radius:2px;background:var(--rose)}
-.compat-pct{font-size:11px;font-weight:700;color:var(--rose);width:30px;text-align:right;flex-shrink:0}
-.card-tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
-.ctag{font-size:12px;background:var(--off);color:var(--ink2);padding:4px 10px;border-radius:20px;font-weight:500}
-.card-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.btn-msg{background:var(--rose);border:none;color:#fff;padding:10px;border-radius:12px;font-size:14px;font-weight:700;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all 0.2s}
-.btn-msg:hover{background:#d02e4a}
-.btn-view{background:none;border:1.5px solid var(--border);color:var(--ink2);padding:9px;border-radius:12px;font-size:14px;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all 0.2s}
-.btn-view:hover{border-color:var(--ink);color:var(--ink)}
-.no-results{text-align:center;padding:80px 20px;display:none}
-.no-results-icon{font-size:48px;margin-bottom:16px}
-.no-results-title{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--ink);margin-bottom:8px}
-.no-results-sub{font-size:15px;color:var(--ink3);margin-bottom:24px}
-.no-results-btn{background:var(--rose);border:none;color:#fff;padding:12px 28px;border-radius:50px;font-size:14px;font-weight:700;font-family:'DM Sans',sans-serif;cursor:pointer;text-decoration:none;display:inline-flex}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RoomSync — Your Matches</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=DM+Sans:wght@300;400;500;700&display=swap');
+
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box
+    }
+
+    :root {
+      --rose: #f66b8c;
+      --rose-light: #fdf0f3;
+      --rose-border: rgba(232, 56, 90, 0.2);
+      --ink: #1a1410;
+      --ink2: #4a4540;
+      --ink3: #9a9590;
+      --off: #f7f5f2;
+      --border: #e8e4df;
+      --green: #22c55e
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--off);
+      color: var(--ink)
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 52px;
+      height: 64px;
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100
+    }
+
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 18px;
+      font-style: italic;
+      font-weight: 650;
+      color: var(--ink);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 8px
+    }
+
+    .logo-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--rose);
+      display: inline-block
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 36px;
+      list-style: none
+    }
+
+    .nav-links a {
+      color: var(--ink2);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 500;
+      transition: color 0.2s
+    }
+
+    .nav-links a:hover {
+      color: var(--ink)
+    }
+
+    .nav-links a.on {
+      color: var(--rose);
+      font-weight: 650
+    }
+
+    .nav-r {
+      display: flex;
+      gap: 10px;
+      align-items: center
+    }
+
+    .btn-outline {
+      background: none;
+      border: 1.5px solid var(--border);
+      color: var(--ink2);
+      padding: 9px 20px;
+      border-radius: 50px;
+      font-size: 12px;
+      font-weight: 500;
+      font-family: 'DM Sans', sans-serif;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      transition: all 0.2s
+    }
+
+    .btn-outline:hover {
+      border-color: var(--ink);
+      color: var(--ink)
+    }
+
+    .btn-rose {
+      background: var(--rose);
+      border: none;
+      color: #fff;
+      padding: 10px 22px;
+      border-radius: 50px;
+      font-size: 12px;
+      font-weight: 700;
+      font-family: 'DM Sans', sans-serif;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      transition: all 0.2s
+    }
+
+    .btn-rose:hover {
+      background: #d02e4a
+    }
+
+    .page-hero {
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+      padding: 36px 52px
+    }
+
+    .hero-top {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 28px
+    }
+
+    .hero-label {
+      font-size: 12px;
+      font-weight: 6500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--rose);
+      margin-bottom: 8px
+    }
+
+    .hero-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(28px, 3.5vw, 40px);
+      font-weight: 650;
+      color: var(--ink);
+      line-height: 1.1
+    }
+
+    .hero-title em {
+      font-style: italic;
+      color: var(--rose)
+    }
+
+    .hero-stats {
+      display: flex;
+      gap: 32px
+    }
+
+    .h-stat {
+      text-align: center
+    }
+
+    .h-stat-n {
+      font-family: 'Playfair Display', serif;
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--ink)
+    }
+
+    .h-stat-n span {
+      color: var(--rose)
+    }
+
+    .h-stat-l {
+      font-size: 12px;
+      color: var(--ink3);
+      margin-top: 2px
+    }
+
+    .filters-bar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap
+    }
+
+    .filter-select {
+      padding: 9px 32px 9px 16px;
+      border: 1.5px solid var(--border);
+      border-radius: 50px;
+      font-size: 12px;
+      font-family: 'DM Sans', sans-serif;
+      color: var(--ink);
+      background: #fff;
+      outline: none;
+      cursor: pointer;
+      transition: border-color 0.2s;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%239a9590' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center
+    }
+
+    .filter-select:focus {
+      border-color: var(--rose)
+    }
+
+    .filter-btn {
+      padding: 9px 18px;
+      border: 1.5px solid var(--border);
+      border-radius: 50px;
+      font-size: 14px;
+      font-weight: 500;
+      font-family: 'DM Sans', sans-serif;
+      color: var(--ink2);
+      background: #fff;
+      cursor: pointer;
+      transition: all 0.2s
+    }
+
+    .filter-btn:hover,
+    .filter-btn.active {
+      border-color: var(--rose);
+      color: var(--rose);
+      background: var(--rose-light)
+    }
+
+    .sort-btn {
+      padding: 9px 18px;
+      border: 1.5px solid var(--border);
+      border-radius: 50px;
+      font-size: 14px;
+      font-weight: 600;
+      font-family: 'DM Sans', sans-serif;
+      color: var(--ink);
+      background: #fff;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-left: auto
+    }
+
+    .sort-btn:hover {
+      border-color: var(--ink)
+    }
+
+    .results-count {
+      font-size: 12px;
+      color: var(--ink3);
+      font-weight: 500;
+      white-space: nowrap
+    }
+
+    .main-content {
+      padding: 36px 52px
+    }
+
+    .matches-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 24px
+    }
+
+    .match-card {
+      background: #fff;
+      border-radius: 20px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      transition: all 0.3s ease;
+      cursor: pointer;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: cardIn 0.5s ease forwards
+    }
+
+    @keyframes cardIn {
+      to {
+        opacity: 1;
+        transform: translateY(0)
+      }
+    }
+
+    .match-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+      border-color: rgba(232, 56, 90, 0.2)
+    }
+
+    .card-photo {
+      height: 220px;
+      overflow: hidden;
+      position: relative
+    }
+
+    .card-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.6s ease
+    }
+
+    .match-card:hover .card-photo img {
+      transform: scale(1.06)
+    }
+
+    .score-badge {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      background: var(--rose);
+      color: #fff;
+      border-radius: 50px;
+      padding: 5px 12px;
+      font-size: 12px;
+      font-weight: 650
+    }
+
+    .score-badge.high {
+      background: #16a34a
+    }
+
+    .online-badge {
+      position: absolute;
+      top: 14px;
+      left: 14px;
+      background: rgba(255, 255, 255, 0.92);
+      border-radius: 50px;
+      padding: 5px 10px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #16a34a;
+      display: flex;
+      align-items: center;
+      gap: 5px
+    }
+
+    .online-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--green)
+    }
+
+    .verified-badge {
+      position: absolute;
+      bottom: 14px;
+      left: 14px;
+      background: rgba(255, 255, 255, 0.92);
+      border-radius: 50px;
+      padding: 4px 10px;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--ink2)
+    }
+
+    .card-body {
+      padding: 18px 20px
+    }
+
+    .card-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 6px
+    }
+
+    .card-name {
+      font-size: 13px;
+      font-weight: 650;
+      color: var(--ink)
+    }
+
+    .card-age {
+      font-size: 11px;
+      color: var(--ink3);
+      margin-top: 2px
+    }
+
+    .save-btn {
+      background: none;
+      border: 1.5px solid var(--border);
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 16px;
+      flex-shrink: 0
+    }
+
+    .save-btn:hover {
+      border-color: var(--rose);
+      background: var(--rose-light)
+    }
+
+    .save-btn.saved {
+      border-color: var(--rose);
+      background: var(--rose-light);
+      color: var(--rose)
+    }
+
+    .card-meta {
+      font: size 11px;
+      px;
+      color: var(--ink3);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px
+    }
+
+    .meta-dot {
+      width: 3px;
+      height: 3px;
+      border-radius: 50%;
+      background: var(--ink3)
+    }
+
+    .compat-bars {
+      margin-bottom: 14px
+    }
+
+    .compat-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 5px
+    }
+
+    .compat-label {
+      font-size: 9px;
+      color: var(--ink3);
+      width: 70px;
+      flex-shrink: 0;
+      text-transform: uppercase;
+      letter-spacing: 0.04em
+    }
+
+    .compat-track {
+      flex: 1;
+      height: 4px;
+      background: var(--off);
+      border-radius: 2px;
+      overflow: hidden
+    }
+
+    .compat-fill {
+      height: 4px;
+      border-radius: 2px;
+      background: var(--rose)
+    }
+
+    .compat-pct {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--rose);
+      width: 30px;
+      text-align: right;
+      flex-shrink: 0
+    }
+
+    .card-tags {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-bottom: 14px
+    }
+
+    .ctag {
+      font-size: 12px;
+      background: var(--off);
+      color: var(--ink2);
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-weight: 500
+    }
+
+    .card-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px
+    }
+
+    .btn-msg {
+      background: var(--rose);
+      border: none;
+      color: #fff;
+      padding: 10px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 700;
+      font-family: 'DM Sans', sans-serif;
+      cursor: pointer;
+      transition: all 0.2s
+    }
+
+    .btn-msg:hover {
+      background: #d02e4a
+    }
+
+    .btn-view {
+      background: none;
+      border: 1.5px solid var(--border);
+      color: var(--ink2);
+      padding: 9px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      font-family: 'DM Sans', sans-serif;
+      cursor: pointer;
+      transition: all 0.2s
+    }
+
+    .btn-view:hover {
+      border-color: var(--ink);
+      color: var(--ink)
+    }
+
+    .no-results {
+      text-align: center;
+      padding: 80px 20px;
+      display: none
+    }
+
+    .no-results-icon {
+      font-size: 42px;
+      margin-bottom: 16px
+    }
+
+    .no-results-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 19px;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 8px
+    }
+
+    .no-results-sub {
+      font-size: 11px;
+      color: var(--ink3);
+      margin-bottom: 24px
+    }
+
+    .no-results-btn {
+      background: var(--rose);
+      border: none;
+      color: #fff;
+      padding: 12px 28px;
+      border-radius: 50px;
+      font-size: 14px;
+      font-weight: 700;
+      font-family: 'DM Sans', sans-serif;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex
+    }
+  </style>
 </head>
+
 <body>
 
-<nav>
-  <a class="nav-logo" href="index.html"><span class="logo-dot"></span> RoomSync</a>
-  <ul class="nav-links">
-    <li><a href="index.html">Home</a></li>
-    <li><a href="matches.html" class="on">Matches</a></li>
-    <li><a href="chat.html">Messages</a></li>
-    <li><a href="quiz.html">Quiz</a></li>
-  </ul>
-  <div class="nav-r">
-    <a href="quiz.html" class="btn-outline">Retake Quiz</a>
-    <a href="signup.html#login" class="btn-rose">My Profile</a>
-  </div>
-</nav>
-
-<div class="page-hero">
-  <div class="hero-top">
-    <div>
-      <div class="hero-label">Your matches</div>
-      <div class="hero-title">People you actually <em>vibe</em> with.</div>
+  <nav>
+    <a class="nav-logo" href="index.html"><span class="logo-dot"></span> RoomSync</a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="matches.html" class="on">Matches</a></li>
+      <li><a href="chat.html">Messages</a></li>
+      <li><a href="quiz.html">Quiz</a></li>
+    </ul>
+    <div class="nav-r">
+      <a href="quiz.html" class="btn-outline">Retake Quiz</a>
+      <a href="signup.html#login" class="btn-rose">My Profile</a>
     </div>
-    <div class="hero-stats">
-      <div class="h-stat"><div class="h-stat-n" id="match-count">8</div><div class="h-stat-l">Matches found</div></div>
-      <div class="h-stat"><div class="h-stat-n"><span>87</span>%</div><div class="h-stat-l">Avg compatibility</div></div>
-      <div class="h-stat"><div class="h-stat-n">3</div><div class="h-stat-l">Cities nearby</div></div>
+  </nav>
+
+  <div class="page-hero">
+    <div class="hero-top">
+      <div>
+        <div class="hero-label">Your matches</div>
+        <div class="hero-title">People you actually <em>vibe</em> with.</div>
+      </div>
+      <div class="hero-stats">
+        <div class="h-stat">
+          <div class="h-stat-n" id="match-count">8</div>
+          <div class="h-stat-l">Matches found</div>
+        </div>
+        <div class="h-stat">
+          <div class="h-stat-n"><span>87</span>%</div>
+          <div class="h-stat-l">Avg compatibility</div>
+        </div>
+        <div class="h-stat">
+          <div class="h-stat-n">3</div>
+          <div class="h-stat-l">Cities nearby</div>
+        </div>
+      </div>
+    </div>
+    <div class="filters-bar">
+      <select class="filter-select" id="city-filter" onchange="applyFilters()">
+        <option value="">All cities</option>
+        <option value="Bangalore">Bangalore</option>
+        <option value="Mumbai">Mumbai</option>
+        <option value="Pune">Pune</option>
+        <option value="Delhi">Delhi</option>
+        <option value="Hyderabad">Hyderabad</option>
+        <option value="Indore">Indore</option>
+      </select>
+      <select class="filter-select" id="budget-filter" onchange="applyFilters()">
+        <option value="">Any budget</option>
+        <option value="low">Under ₹10K</option>
+        <option value="mid">₹10K–₹15K</option>
+        <option value="high">Above ₹15K</option>
+      </select>
+      <select class="filter-select" id="role-filter" onchange="applyFilters()">
+        <option value="">Anyone</option>
+        <option value="Student">Students only</option>
+        <option value="Working">Professionals only</option>
+      </select>
+      <button class="filter-btn" id="online-btn" onclick="toggleOnline()">Online now</button>
+      <button class="filter-btn" id="verified-btn" onclick="toggleVerified()">Verified only</button>
+      <span class="results-count" id="results-count">Showing 8 matches</span>
+      <button class="sort-btn" id="sort-btn" onclick="toggleSort()">Sort: Best match ↕</button>
     </div>
   </div>
-  <div class="filters-bar">
-    <select class="filter-select" id="city-filter" onchange="applyFilters()">
-      <option value="">All cities</option>
-      <option value="Bangalore">Bangalore</option>
-      <option value="Mumbai">Mumbai</option>
-      <option value="Pune">Pune</option>
-      <option value="Delhi">Delhi</option>
-      <option value="Hyderabad">Hyderabad</option>
-      <option value="Indore">Indore</option>
-    </select>
-    <select class="filter-select" id="budget-filter" onchange="applyFilters()">
-      <option value="">Any budget</option>
-      <option value="low">Under ₹10K</option>
-      <option value="mid">₹10K–₹15K</option>
-      <option value="high">Above ₹15K</option>
-    </select>
-    <select class="filter-select" id="role-filter" onchange="applyFilters()">
-      <option value="">Anyone</option>
-      <option value="Student">Students only</option>
-      <option value="Working">Professionals only</option>
-    </select>
-    <button class="filter-btn" id="online-btn" onclick="toggleOnline()">Online now</button>
-    <button class="filter-btn" id="verified-btn" onclick="toggleVerified()">Verified only</button>
-    <span class="results-count" id="results-count">Showing 8 matches</span>
-    <button class="sort-btn" id="sort-btn" onclick="toggleSort()">Sort: Best match ↕</button>
+
+  <div class="main-content">
+    <div class="matches-grid" id="matches-grid"></div>
+    <div class="no-results" id="no-results">
+      <div class="no-results-icon">🔍</div>
+      <div class="no-results-title">No matches found</div>
+      <div class="no-results-sub">Try adjusting your filters to see more people</div>
+      <a class="no-results-btn" href="quiz.html">Retake Quiz to improve matches</a>
+    </div>
   </div>
-</div>
 
-<div class="main-content">
-  <div class="matches-grid" id="matches-grid"></div>
-  <div class="no-results" id="no-results">
-    <div class="no-results-icon">🔍</div>
-    <div class="no-results-title">No matches found</div>
-    <div class="no-results-sub">Try adjusting your filters to see more people</div>
-    <a class="no-results-btn" href="quiz.html">Retake Quiz to improve matches</a>
-  </div>
-</div>
+  <script>
+    const people = [
+      { id: 1, name: 'Arjun Saxena.', age: 22, city: 'Bangalore', role: 'Student', budget: 'mid', budgetLabel: '₹10–14K', score: 92, online: true, verified: true, img: 'https://as1.ftcdn.net/v2/jpg/05/71/80/16/1000_F_571801619_HxaQv1mlrJ0xzpywSy8WB8ejO8b57ocu.jpg', tags: ['Night owl', 'Non-smoker', 'WFH'], sleep: 92, social: 78, clean: 95, work: 88 },
+      { id: 2, name: 'Priya Mishra.', age: 24, city: 'Mumbai', role: 'Working', budget: 'high', budgetLabel: '₹12–16K', score: 91, online: true, verified: true, img: 'https://as2.ftcdn.net/jpg/08/04/25/17/1000_F_804251784_CwWPJKZGwfuuCvkxKKnpN22PaevtnOQ6.jpg', tags: ['Early riser', 'Vegetarian', 'Clean'], sleep: 85, social: 90, clean: 92, work: 82 },
+      { id: 3, name: 'Rahul Shrivastava.', age: 21, city: 'Pune', role: 'Student', budget: 'low', budgetLabel: '₹8–11K', score: 85, online: false, verified: true, img: 'https://as1.ftcdn.net/jpg/04/80/36/22/1000_F_480362275_jxY4P8sDTsDQHMJILSSS6iyRNxsqpln4.jpg', tags: ['Student', 'Quiet', 'Gym-goer'], sleep: 80, social: 65, clean: 88, work: 90 },
+      { id: 4, name: 'Ruhi Verma.', age: 23, city: 'Hyderabad', role: 'Working', budget: 'mid', budgetLabel: '₹9–12K', score: 89, online: true, verified: false, img: 'https://as2.ftcdn.net/jpg/05/23/12/85/1000_F_523128514_dg8XGU1HWmeV9PbqzSrHxGv0tqcud11e.jpg', tags: ['Late sleeper', 'Pet lover', 'Foodie'], sleep: 88, social: 82, clean: 75, work: 78 },
+      { id: 5, name: 'Karan Pandey.', age: 25, city: 'Delhi', role: 'Working', budget: 'high', budgetLabel: '₹14–18K', score: 82, online: true, verified: true, img: 'https://as1.ftcdn.net/v2/jpg/06/41/26/64/1000_F_641266494_Qy6PJV3b9ZvuFPg7f5vGEFMMsynp4NWZ.webp', tags: ['Morning person', 'Non-smoker', 'Minimalist'], sleep: 75, social: 70, clean: 90, work: 85 },
+      { id: 6, name: 'Ananya Tiwari.', age: 22, city: 'Bangalore', role: 'Student', budget: 'mid', budgetLabel: '₹10–13K', score: 88, online: false, verified: true, img: 'https://as1.ftcdn.net/v2/jpg/13/42/18/44/1000_F_1342184469_Pllo8PDNBTNQusW5gzLYZn1vaUWzqgEC.jpg', tags: ['Night owl', 'Vegetarian', 'WFH'], sleep: 90, social: 72, clean: 85, work: 92 },
+      { id: 7, name: 'Vikram Choudhary.', age: 26, city: 'Mumbai', role: 'Working', budget: 'high', budgetLabel: '₹15–20K', score: 79, online: true, verified: false, img: 'https://knowlepedia.org/images/d/d1/Prince_Narula.jpg', tags: ['Social', 'Pet-friendly', 'Foodie'], sleep: 70, social: 88, clean: 72, work: 80 },
+      { id: 8, name: 'Meera Jha.', age: 23, city: 'Indore', role: 'Student', budget: 'low', budgetLabel: '₹7–10K', score: 86, online: true, verified: true, img: 'https://static.toiimg.com/thumb/msid-92358733,width-400,resizemode-4/92358733.jpg', tags: ['Early riser', 'Clean', 'Quiet'], sleep: 88, social: 68, clean: 94, work: 86 },
+    ];
 
-<script>
-const people=[
-  {id:1,name:'Arjun Saxena.',age:22,city:'Bangalore',role:'Student',budget:'mid',budgetLabel:'₹10–14K',score:92,online:true,verified:true,img:'https://as1.ftcdn.net/v2/jpg/05/71/80/16/1000_F_571801619_HxaQv1mlrJ0xzpywSy8WB8ejO8b57ocu.jpg',tags:['Night owl','Non-smoker','WFH'],sleep:92,social:78,clean:95,work:88},
-  {id:2,name:'Priya Mishra.',age:24,city:'Mumbai',role:'Working',budget:'high',budgetLabel:'₹12–16K',score:91,online:true,verified:true,img:'https://as2.ftcdn.net/jpg/08/04/25/17/1000_F_804251784_CwWPJKZGwfuuCvkxKKnpN22PaevtnOQ6.jpg',tags:['Early riser','Vegetarian','Clean'],sleep:85,social:90,clean:92,work:82},
-  {id:3,name:'Rahul Shrivastava.',age:21,city:'Pune',role:'Student',budget:'low',budgetLabel:'₹8–11K',score:85,online:false,verified:true,img:'https://as1.ftcdn.net/jpg/04/80/36/22/1000_F_480362275_jxY4P8sDTsDQHMJILSSS6iyRNxsqpln4.jpg',tags:['Student','Quiet','Gym-goer'],sleep:80,social:65,clean:88,work:90},
-  {id:4,name:'Ruhi Verma.',age:23,city:'Hyderabad',role:'Working',budget:'mid',budgetLabel:'₹9–12K',score:89,online:true,verified:false,img:'https://as2.ftcdn.net/jpg/05/23/12/85/1000_F_523128514_dg8XGU1HWmeV9PbqzSrHxGv0tqcud11e.jpg',tags:['Late sleeper','Pet lover','Foodie'],sleep:88,social:82,clean:75,work:78},
-  {id:5,name:'Karan Pandey.',age:25,city:'Delhi',role:'Working',budget:'high',budgetLabel:'₹14–18K',score:82,online:true,verified:true,img:'https://as1.ftcdn.net/v2/jpg/06/41/26/64/1000_F_641266494_Qy6PJV3b9ZvuFPg7f5vGEFMMsynp4NWZ.webp',tags:['Morning person','Non-smoker','Minimalist'],sleep:75,social:70,clean:90,work:85},
-  {id:6,name:'Ananya Tiwari.',age:22,city:'Bangalore',role:'Student',budget:'mid',budgetLabel:'₹10–13K',score:88,online:false,verified:true,img:'https://as1.ftcdn.net/v2/jpg/13/42/18/44/1000_F_1342184469_Pllo8PDNBTNQusW5gzLYZn1vaUWzqgEC.jpg',tags:['Night owl','Vegetarian','WFH'],sleep:90,social:72,clean:85,work:92},
-  {id:7,name:'Vikram Choudhary.',age:26,city:'Mumbai',role:'Working',budget:'high',budgetLabel:'₹15–20K',score:79,online:true,verified:false,img:'https://knowlepedia.org/images/d/d1/Prince_Narula.jpg',tags:['Social','Pet-friendly','Foodie'],sleep:70,social:88,clean:72,work:80},
-  {id:8,name:'Meera Jha.',age:23,city:'Indore',role:'Student',budget:'low',budgetLabel:'₹7–10K',score:86,online:true,verified:true,img:'https://static.toiimg.com/thumb/msid-92358733,width-400,resizemode-4/92358733.jpg',tags:['Early riser','Clean','Quiet'],sleep:88,social:68,clean:94,work:86},
-];
+    let saved = new Set();
+    let sortAsc = false;
+    let onlineOnly = false;
+    let verifiedOnly = false;
 
-let saved=new Set();
-let sortAsc=false;
-let onlineOnly=false;
-let verifiedOnly=false;
+    function applyFilters() {
+      const city = document.getElementById('city-filter').value;
+      const budget = document.getElementById('budget-filter').value;
+      const role = document.getElementById('role-filter').value;
+      let filtered = people.filter(p => {
+        if (city && p.city !== city) return false;
+        if (budget && p.budget !== budget) return false;
+        if (role && p.role !== role) return false;
+        if (onlineOnly && !p.online) return false;
+        if (verifiedOnly && !p.verified) return false;
+        return true;
+      });
+      if (sortAsc) filtered.sort((a, b) => a.score - b.score);
+      else filtered.sort((a, b) => b.score - a.score);
+      renderCards(filtered);
+    }
 
-function applyFilters(){
-  const city=document.getElementById('city-filter').value;
-  const budget=document.getElementById('budget-filter').value;
-  const role=document.getElementById('role-filter').value;
-  let filtered=people.filter(p=>{
-    if(city && p.city!==city)return false;
-    if(budget && p.budget!==budget)return false;
-    if(role && p.role!==role)return false;
-    if(onlineOnly && !p.online)return false;
-    if(verifiedOnly && !p.verified)return false;
-    return true;
-  });
-  if(sortAsc)filtered.sort((a,b)=>a.score-b.score);
-  else filtered.sort((a,b)=>b.score-a.score);
-  renderCards(filtered);
-}
-
-function toggleOnline(){
-  onlineOnly=!onlineOnly;
-  document.getElementById('online-btn').classList.toggle('active',onlineOnly);
-  applyFilters();
-}
-function toggleVerified(){
-  verifiedOnly=!verifiedOnly;
-  document.getElementById('verified-btn').classList.toggle('active',verifiedOnly);
-  applyFilters();
-}
-function toggleSort(){
-  sortAsc=!sortAsc;
-  document.getElementById('sort-btn').textContent=sortAsc?'Sort: Lowest first ↕':'Sort: Best match ↕';
-  applyFilters();
-}
-function toggleSave(id,btn){
-  event.stopPropagation();
-  if(saved.has(id)){saved.delete(id);btn.classList.remove('saved');btn.textContent='♡';}
-  else{saved.add(id);btn.classList.add('saved');btn.textContent='♥';}
-}
-function renderCards(list){
-  const grid=document.getElementById('matches-grid');
-  const noRes=document.getElementById('no-results');
-  document.getElementById('results-count').textContent=`Showing ${list.length} match${list.length!==1?'es':''}`;
-  document.getElementById('match-count').textContent=list.length;
-  if(list.length===0){grid.innerHTML='';noRes.style.display='block';return;}
-  noRes.style.display='none';
-  grid.innerHTML=list.map((p,i)=>`
-    <div class="match-card" style="animation-delay:${i*0.06}s" onclick="window.location.href='chat.html'">
+    function toggleOnline() {
+      onlineOnly = !onlineOnly;
+      document.getElementById('online-btn').classList.toggle('active', onlineOnly);
+      applyFilters();
+    }
+    function toggleVerified() {
+      verifiedOnly = !verifiedOnly;
+      document.getElementById('verified-btn').classList.toggle('active', verifiedOnly);
+      applyFilters();
+    }
+    function toggleSort() {
+      sortAsc = !sortAsc;
+      document.getElementById('sort-btn').textContent = sortAsc ? 'Sort: Lowest first ↕' : 'Sort: Best match ↕';
+      applyFilters();
+    }
+    function toggleSave(id, btn) {
+      event.stopPropagation();
+      if (saved.has(id)) { saved.delete(id); btn.classList.remove('saved'); btn.textContent = '♡'; }
+      else { saved.add(id); btn.classList.add('saved'); btn.textContent = '♥'; }
+    }
+    function renderCards(list) {
+      const grid = document.getElementById('matches-grid');
+      const noRes = document.getElementById('no-results');
+      document.getElementById('results-count').textContent = `Showing ${list.length} match${list.length !== 1 ? 'es' : ''}`;
+      document.getElementById('match-count').textContent = list.length;
+      if (list.length === 0) { grid.innerHTML = ''; noRes.style.display = 'block'; return; }
+      noRes.style.display = 'none';
+      grid.innerHTML = list.map((p, i) => `
+    <div class="match-card" style="animation-delay:${i * 0.06}s" onclick="window.location.href='chat.html'">
       <div class="card-photo">
         <img src="${p.img}" alt="${p.name}" loading="lazy"/>
-        <div class="score-badge ${p.score>=90?'high':''}">${p.score}% match</div>
-        ${p.online?'<div class="online-badge"><span class="online-dot"></span> Online</div>':''}
-        ${p.verified?'<div class="verified-badge">✓ Verified</div>':''}
+        <div class="score-badge ${p.score >= 90 ? 'high' : ''}">${p.score}% match</div>
+        ${p.online ? '<div class="online-badge"><span class="online-dot"></span> Online</div>' : ''}
+        ${p.verified ? '<div class="verified-badge">✓ Verified</div>' : ''}
       </div>
       <div class="card-body">
         <div class="card-top">
@@ -222,7 +730,7 @@ function renderCards(list){
             <div class="card-name">${p.name}</div>
             <div class="card-age">${p.age} years · ${p.role}</div>
           </div>
-          <button class="save-btn ${saved.has(p.id)?'saved':''}" onclick="toggleSave(${p.id},this)">${saved.has(p.id)?'♥':'♡'}</button>
+          <button class="save-btn ${saved.has(p.id) ? 'saved' : ''}" onclick="toggleSave(${p.id},this)">${saved.has(p.id) ? '♥' : '♡'}</button>
         </div>
         <div class="card-meta">
           <span>📍 ${p.city}</span>
@@ -235,7 +743,7 @@ function renderCards(list){
           <div class="compat-row"><span class="compat-label">Clean</span><div class="compat-track"><div class="compat-fill" style="width:${p.clean}%"></div></div><span class="compat-pct">${p.clean}%</span></div>
           <div class="compat-row"><span class="compat-label">Work</span><div class="compat-track"><div class="compat-fill" style="width:${p.work}%"></div></div><span class="compat-pct">${p.work}%</span></div>
         </div>
-        <div class="card-tags">${p.tags.map(t=>`<span class="ctag">${t}</span>`).join('')}</div>
+        <div class="card-tags">${p.tags.map(t => `<span class="ctag">${t}</span>`).join('')}</div>
         <div class="card-actions">
           <button class="btn-msg" onclick="event.stopPropagation();window.location.href='chat.html'">Message</button>
           <button class="btn-view" onclick="event.stopPropagation();window.location.href='chat.html'">View Profile</button>
@@ -243,9 +751,10 @@ function renderCards(list){
       </div>
     </div>
   `).join('');
-}
+    }
 
-applyFilters();
-</script>
+    applyFilters();
+  </script>
 </body>
+
 </html>
