@@ -7,22 +7,13 @@
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=DM+Sans:wght@300;400;500;700&display=swap');
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-:root{
-  --rose:#e8385a;
-  --rose-dark:#c42d4a;
-  --ink:#1a1410;
-  --ink2:#4a4540;
-  --ink3:#9a9590;
-  --white:#ffffff;
-  --off:#f7f5f2;
-  --border:#e8e4df;
-}
+:root{--rose:#e8385a;--rose-dark:#c42d4a;--ink:#1a1410;--ink2:#4a4540;--ink3:#9a9590;--white:#ffffff;--off:#f7f5f2;--border:#e8e4df;}
 body{font-family:'DM Sans',sans-serif;background:#000;color:var(--ink)}
 .page{display:none;animation:fadeSlide 0.5s ease both}
 .page.active{display:block}
 @keyframes fadeSlide{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
 .auth-wrap{min-height:100vh;position:relative;display:flex;align-items:center;justify-content:center;padding:40px 20px;}
-.bg-photo{position:absolute;inset:0;z-index:0;background-size:cover;background-position:center;transition:background-image 0.6s ease;}
+.bg-photo{position:absolute;inset:0;z-index:0;background-size:cover;background-position:center;}
 .bg-photo::after{content:'';position:absolute;inset:0;background:rgba(15,10,8,0.52);}
 .glass-card{position:relative;z-index:2;background:rgba(255,255,255,0.94);border-radius:24px;padding:44px 40px;width:100%;max-width:440px;box-shadow:0 32px 80px rgba(0,0,0,0.28);}
 .card-logo{font-family:'Playfair Display',serif;font-size:17px;font-style:italic;font-weight:700;color:var(--ink);margin-bottom:28px;display:flex;align-items:center;gap:8px;text-decoration:none;}
@@ -43,8 +34,6 @@ body{font-family:'DM Sans',sans-serif;background:#000;color:var(--ink)}
 .field input,.field select{width:100%;padding:12px 16px;border:1.5px solid var(--border);border-radius:12px;font-size:14px;font-family:'DM Sans',sans-serif;color:var(--ink);background:#fff;outline:none;transition:border-color 0.2s;-webkit-appearance:none;}
 .field input:focus,.field select:focus{border-color:var(--rose)}
 .field input::placeholder{color:var(--ink3)}
-.field-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:16px}
-.field-row-3 .field{margin-bottom:0}
 .terms{display:flex;align-items:flex-start;gap:10px;margin-bottom:20px;font-size:9px;color:var(--ink2);line-height:1.5;}
 .terms input[type=checkbox]{width:16px;height:16px;margin-top:2px;flex-shrink:0;accent-color:var(--rose);cursor:pointer;}
 .terms a{color:var(--rose);text-decoration:none;font-weight:600}
@@ -71,25 +60,66 @@ body{font-family:'DM Sans',sans-serif;background:#000;color:var(--ink)}
 .mb-16{margin-bottom:16px}
 .back-home{position:absolute;z-index:4;top:28px;left:36px;color:rgba(255,255,255,0.8);text-decoration:none;font-size:23px;font-weight:600;display:flex;align-items:center;gap:6px;transition:color 0.2s;}
 .back-home:hover{color:#fff}
+
+/* ── COMING SOON MODAL ── */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:999;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+.modal-overlay.open{display:flex}
+.modal-box{background:#fff;border-radius:24px;padding:36px 32px;width:100%;max-width:380px;box-shadow:0 32px 80px rgba(0,0,0,0.3);text-align:center;animation:popIn 0.3s ease both}
+@keyframes popIn{from{opacity:0;transform:scale(0.92)}to{opacity:1;transform:scale(1)}}
+.modal-icon{font-size:48px;margin-bottom:16px}
+.modal-title{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--ink);margin-bottom:8px}
+.modal-sub{font-size:14px;color:var(--ink3);line-height:1.6;margin-bottom:24px}
+.modal-notify{display:flex;gap:8px;margin-bottom:16px}
+.modal-notify input{flex:1;padding:10px 14px;border:1.5px solid var(--border);border-radius:10px;font-size:13px;font-family:'DM Sans',sans-serif;outline:none;color:var(--ink)}
+.modal-notify input:focus{border-color:var(--rose)}
+.modal-notify button{background:var(--rose);border:none;color:#fff;padding:10px 16px;border-radius:10px;font-size:13px;font-weight:700;font-family:'DM Sans',sans-serif;cursor:pointer;white-space:nowrap}
+.modal-notify button:hover{background:var(--rose-dark)}
+.modal-close-btn{width:100%;padding:11px;border:1.5px solid var(--border);background:none;border-radius:12px;font-size:13px;font-weight:600;color:var(--ink2);font-family:'DM Sans',sans-serif;cursor:pointer}
+.modal-close-btn:hover{border-color:var(--ink);color:var(--ink)}
+.modal-alt{font-size:12px;color:var(--ink3);margin-top:14px}
+.modal-alt a{color:var(--rose);font-weight:700;text-decoration:none;cursor:pointer}
+
+/* ── FOOTER ── */
+.auth-footer{
+  position:fixed;bottom:0;left:0;right:0;
+  background:rgba(0,0,0,0.7);backdrop-filter:blur(10px);
+  border-top:1px solid rgba(255,255,255,0.1);
+  padding:12px 40px;
+  display:flex;align-items:center;justify-content:space-between;
+  z-index:10;flex-wrap:wrap;gap:8px;
+}
+.footer-links{display:flex;gap:20px;flex-wrap:wrap}
+.footer-links a{color:rgba(255,255,255,0.6);text-decoration:none;font-size:11px;font-weight:500;transition:color 0.2s}
+.footer-links a:hover{color:#fff}
+.footer-helpline{display:flex;align-items:center;gap:8px;color:rgba(255,255,255,0.8);font-size:11px;font-weight:600}
+.helpline-dot{width:6px;height:6px;border-radius:50%;background:#4ade80;animation:pulse2 2s infinite}
+.footer-copy{color:rgba(255,255,255,0.4);font-size:10px}
 </style>
 </head>
 <body>
+
+<!-- COMING SOON MODAL -->
+<div class="modal-overlay" id="coming-modal" onclick="if(event.target===this)closeModal()">
+  <div class="modal-box">
+    <div class="modal-icon" id="modal-icon">🚀</div>
+    <div class="modal-title" id="modal-title">Coming Soon!</div>
+    <div class="modal-sub" id="modal-sub">Google login is under development. Enter your email to get notified when it launches!</div>
+    <div class="modal-notify">
+      <input type="email" id="notify-email" placeholder="your@email.com"/>
+      <button onclick="notifyMe()">Notify Me</button>
+    </div>
+    <button class="modal-close-btn" onclick="closeModal()">Close</button>
+    <div class="modal-alt">Or <a onclick="closeModal()">sign up with email</a> right now — it takes 30 seconds!</div>
+  </div>
+</div>
 
 <!-- SIGNUP PAGE -->
 <div id="page-signup" class="page active">
   <div class="auth-wrap">
     <div class="bg-photo" style="background-image:url('https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=1400&h=900&fit=crop')"></div>
-
     <a class="back-home" href="index.html">&#8592; Back to home</a>
-
-    <div class="floating-badge">
-      <span class="live-dot"></span> 340 people joined today
-    </div>
-
-    <div class="page-indicator">
-      <div class="ind on"></div>
-      <div class="ind"></div>
-    </div>
+    <div class="floating-badge"><span class="live-dot"></span> 340 people joined today</div>
+    <div class="page-indicator"><div class="ind on"></div><div class="ind"></div></div>
 
     <div class="glass-card">
       <a class="card-logo" href="index.html"><span class="logo-dot"></span> RoomSync</a>
@@ -97,84 +127,52 @@ body{font-family:'DM Sans',sans-serif;background:#000;color:var(--ink)}
       <div class="card-sub">Find a roommate who actually matches your lifestyle.</div>
 
       <div class="social-row">
-        <button class="social-btn" onclick="alert('Google login coming soon! Please use email signup for now.')">
-          <span class="social-icon">G</span> Google
+        <button class="social-btn" onclick="showComingSoon('google','signup')">
+          <span class="social-icon">
+            <svg width="16" height="16" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.08 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.31-8.16 2.31-6.26 0-11.57-3.59-13.46-8.83l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+          </span> Google
         </button>
-        <button class="social-btn" onclick="alert('Facebook login coming soon! Please use email signup for now.')">
-          <span class="social-icon">f</span> Facebook
+        <button class="social-btn" onclick="showComingSoon('facebook','signup')">
+          <span class="social-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#1877F2"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+          </span> Facebook
         </button>
       </div>
 
-      <div class="divider">
-        <div class="div-line"></div>
-        <div class="div-text">or sign up with email</div>
-        <div class="div-line"></div>
-      </div>
+      <div class="divider"><div class="div-line"></div><div class="div-text">or sign up with email</div><div class="div-line"></div></div>
 
       <div class="field-row mb-16">
-        <div class="field">
-          <label>First name</label>
-          <input type="text" id="signup-firstname" placeholder="Arjun"/>
-        </div>
-        <div class="field">
-          <label>Last name</label>
-          <input type="text" id="signup-lastname" placeholder="Singh"/>
-        </div>
+        <div class="field"><label>First name</label><input type="text" id="signup-firstname" placeholder="Arjun"/></div>
+        <div class="field"><label>Last name</label><input type="text" id="signup-lastname" placeholder="Singh"/></div>
       </div>
-
-      <div class="field mb-16">
-        <label>Email address</label>
-        <input type="email" id="signup-email" placeholder="arjun@college.edu"/>
-      </div>
-
-      <div class="field mb-16">
-        <label>Phone number</label>
-        <input type="tel" id="signup-phone" placeholder="+91 98765 43210"/>
-      </div>
-
+      <div class="field mb-16"><label>Email address</label><input type="email" id="signup-email" placeholder="arjun@college.edu"/></div>
+      <div class="field mb-16"><label>Phone number</label><input type="tel" id="signup-phone" placeholder="+91 98765 43210"/></div>
       <div class="field-row mb-16">
-        <div class="field">
-          <label>City</label>
+        <div class="field"><label>City</label>
           <select id="signup-city">
-            <option>Bangalore</option>
-            <option>Mumbai</option>
-            <option>Pune</option>
-            <option>Delhi</option>
-            <option>Hyderabad</option>
-            <option>Indore</option>
-            <option>Chennai</option>
+            <option>Bangalore</option><option>Mumbai</option><option>Pune</option>
+            <option>Delhi</option><option>Hyderabad</option><option>Indore</option><option>Chennai</option>
           </select>
         </div>
-        <div class="field">
-          <label>I am a</label>
+        <div class="field"><label>I am a</label>
           <select id="signup-role">
-            <option>Student</option>
-            <option>Working professional</option>
-            <option>Freelancer</option>
+            <option>Student</option><option>Working professional</option><option>Freelancer</option>
           </select>
         </div>
       </div>
-
-      <div class="field mb-16">
-        <label>Password</label>
-        <input type="password" id="signup-password" placeholder="Min. 8 characters"/>
-      </div>
+      <div class="field mb-16"><label>Password</label><input type="password" id="signup-password" placeholder="Min. 8 characters"/></div>
 
       <div class="terms">
         <input type="checkbox" id="signup-terms"/>
         <span>I agree to RoomSync's
           <a href="#" onclick="alert('Terms of Service: By using RoomSync you agree to our community guidelines, privacy practices, and verification requirements.')">Terms of Service</a>
-          and
-          <a href="#" onclick="alert('Privacy Policy: Your data is encrypted and never sold to third parties. Contact info is hidden until you choose to share.')">Privacy Policy</a>.
+          and <a href="#" onclick="alert('Privacy Policy: Your data is encrypted and never sold to third parties. Contact info is hidden until you choose to share.')">Privacy Policy</a>.
           I confirm my profile will be verified.
         </span>
       </div>
 
       <button class="btn-submit" onclick="handleSignup()">Create Account & Get Matched ↗</button>
-
-      <div class="switch-line">
-        Already have an account? <a onclick="showLogin()">Log in here</a>
-      </div>
+      <div class="switch-line">Already have an account? <a onclick="showLogin()">Log in here</a></div>
     </div>
 
     <div class="bg-quotes">
@@ -182,10 +180,7 @@ body{font-family:'DM Sans',sans-serif;background:#000;color:var(--ink)}
         <div class="quote-text">"Found my perfect roommate in 3 days. We matched 91% and honestly we've become best friends."</div>
         <div class="quote-author">
           <div class="quote-face"><img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=64&h=64&fit=crop&crop=face" alt="user"/></div>
-          <div>
-            <div class="quote-name">Priya M.</div>
-            <div class="quote-city">Bangalore · Matched Dec 2024</div>
-          </div>
+          <div><div class="quote-name">Priya M.</div><div class="quote-city">Bangalore · Matched Dec 2024</div></div>
         </div>
       </div>
     </div>
@@ -196,17 +191,9 @@ body{font-family:'DM Sans',sans-serif;background:#000;color:var(--ink)}
 <div id="page-login" class="page">
   <div class="auth-wrap">
     <div class="bg-photo" style="background-image:url('https://images.unsplash.com/photo-1560185007-cde436f6a4d0?w=1400&h=900&fit=crop')"></div>
-
     <a class="back-home" href="index.html">&#8592; Back to home</a>
-
-    <div class="floating-badge">
-      <span class="live-dot"></span> 12,000+ active users
-    </div>
-
-    <div class="page-indicator">
-      <div class="ind"></div>
-      <div class="ind on"></div>
-    </div>
+    <div class="floating-badge"><span class="live-dot"></span> 12,000+ active users</div>
+    <div class="page-indicator"><div class="ind"></div><div class="ind on"></div></div>
 
     <div class="glass-card">
       <a class="card-logo" href="index.html"><span class="logo-dot"></span> RoomSync</a>
@@ -214,39 +201,29 @@ body{font-family:'DM Sans',sans-serif;background:#000;color:var(--ink)}
       <div class="card-sub">Log in to see your matches and messages.</div>
 
       <div class="social-row">
-        <button class="social-btn" onclick="alert('Google login coming soon! Please use email login for now.')">
-          <span class="social-icon">G</span> Google
+        <button class="social-btn" onclick="showComingSoon('google','login')">
+          <span class="social-icon">
+            <svg width="16" height="16" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.08 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.31-8.16 2.31-6.26 0-11.57-3.59-13.46-8.83l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+          </span> Google
         </button>
-        <button class="social-btn" onclick="alert('Facebook login coming soon! Please use email login for now.')">
-          <span class="social-icon">f</span> Facebook
+        <button class="social-btn" onclick="showComingSoon('facebook','login')">
+          <span class="social-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#1877F2"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+          </span> Facebook
         </button>
       </div>
 
-      <div class="divider">
-        <div class="div-line"></div>
-        <div class="div-text">or continue with email</div>
-        <div class="div-line"></div>
-      </div>
+      <div class="divider"><div class="div-line"></div><div class="div-text">or continue with email</div><div class="div-line"></div></div>
 
-      <div class="field mb-16">
-        <label>Email address</label>
-        <input type="email" id="login-email" placeholder="your@email.com"/>
-      </div>
-
-      <div class="field mb-16">
-        <label>Password</label>
-        <input type="password" id="login-password" placeholder="Your password"/>
-      </div>
+      <div class="field mb-16"><label>Email address</label><input type="email" id="login-email" placeholder="your@email.com"/></div>
+      <div class="field mb-16"><label>Password</label><input type="password" id="login-password" placeholder="Your password"/></div>
 
       <div style="display:flex;justify-content:flex-end;margin-bottom:24px">
         <a href="#" onclick="handleForgotPassword()" style="font-size:13px;color:var(--rose);font-weight:600;text-decoration:none">Forgot password?</a>
       </div>
 
       <button class="btn-submit" onclick="handleLogin()">Log In to RoomSync ↗</button>
-
-      <div class="switch-line">
-        New to RoomSync? <a onclick="showSignup()">Create a free account</a>
-      </div>
+      <div class="switch-line">New to RoomSync? <a onclick="showSignup()">Create a free account</a></div>
 
       <div style="margin-top:28px;padding-top:20px;border-top:1px solid var(--border)">
         <div style="font-size:12px;color:var(--ink3);text-align:center;margin-bottom:14px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Today's active matches near you</div>
@@ -280,119 +257,124 @@ body{font-family:'DM Sans',sans-serif;background:#000;color:var(--ink)}
         <div class="quote-text">"I was skeptical but the AI matching is genuinely accurate. My roommate and I have the exact same sleep schedule."</div>
         <div class="quote-author">
           <div class="quote-face"><img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=64&h=64&fit=crop&crop=face" alt="user"/></div>
-          <div>
-            <div class="quote-name">Rahul K.</div>
-            <div class="quote-city">Pune · Matched Jan 2025</div>
-          </div>
+          <div><div class="quote-name">Rahul K.</div><div class="quote-city">Pune · Matched Jan 2025</div></div>
         </div>
       </div>
     </div>
   </div>
 </div>
 
+<!-- FOOTER -->
+<footer class="auth-footer">
+  <div class="footer-helpline">
+    <span class="helpline-dot"></span>
+    Help: <a href="mailto:support@roomsync.in" style="color:#4ade80;text-decoration:none;margin-left:4px">support@roomsync.in</a>
+    &nbsp;|&nbsp; Helpline: <a href="tel:+918800001234" style="color:#4ade80;text-decoration:none;margin-left:4px">+91 88000 01234</a>
+  </div>
+  <div class="footer-links">
+    <a href="index.html">Home</a>
+    <a href="#">Help Centre</a>
+    <a href="#">Safety Tips</a>
+    <a href="#">Privacy Policy</a>
+    <a href="#">Terms</a>
+    <a href="mailto:support@roomsync.in">Contact Us</a>
+  </div>
+  <div class="footer-copy">© 2026 RoomSync · Made in India 🇮🇳</div>
+</footer>
+
 <script>
+function showComingSoon(provider, type) {
+  const icons = { google: '🔵', facebook: '🔷' };
+  const names = { google: 'Google', facebook: 'Facebook' };
+  document.getElementById('modal-icon').textContent = icons[provider] || '🚀';
+  document.getElementById('modal-title').textContent = names[provider] + ' Login — Coming Soon!';
+  document.getElementById('modal-sub').textContent =
+    names[provider] + ' login is under development and will launch soon. Enter your email to get notified, or use email ' + (type === 'signup' ? 'signup' : 'login') + ' below!';
+  document.getElementById('coming-modal').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('coming-modal').classList.remove('open');
+}
+
+function notifyMe() {
+  const email = document.getElementById('notify-email').value.trim();
+  if (!email) { alert('Please enter your email!'); return; }
+  document.getElementById('modal-sub').textContent = '✅ Done! We will notify ' + email + ' when Google & Facebook login launches!';
+  document.getElementById('modal-notify').style.display = 'none';
+}
+
 function showLogin(){
   document.getElementById('page-signup').classList.remove('active');
-  const l = document.getElementById('page-login');
-  l.classList.add('active');
-  l.style.animation='none';
+  const l=document.getElementById('page-login');
+  l.classList.add('active');l.style.animation='none';
   requestAnimationFrame(()=>{l.style.animation='';});
 }
 function showSignup(){
   document.getElementById('page-login').classList.remove('active');
-  const s = document.getElementById('page-signup');
-  s.classList.add('active');
-  s.style.animation='none';
+  const s=document.getElementById('page-signup');
+  s.classList.add('active');s.style.animation='none';
   requestAnimationFrame(()=>{s.style.animation='';});
 }
 
-window.addEventListener('DOMContentLoaded', function(){
-  const hash = window.location.hash;
-  if(hash === '#login'){
-    showLogin();
-  } else {
-    showSignup();
-  }
+window.addEventListener('DOMContentLoaded',function(){
+  const hash=window.location.hash;
+  if(hash==='#login'){showLogin();}else{showSignup();}
 });
 
 function handleForgotPassword(){
-  const email = document.getElementById('login-email').value.trim();
-  if(!email){
-    alert('Please enter your email address first, then click Forgot Password.');
-    return;
-  }
-  alert('Password reset link sent to ' + email + '! Check your inbox.');
+  const email=document.getElementById('login-email').value.trim();
+  if(!email){alert('Please enter your email address first.');return;}
+  alert('Password reset link sent to '+email+'! Check your inbox.');
 }
 
 async function handleSignup(){
-  const firstName = document.getElementById('signup-firstname').value.trim();
-  const lastName  = document.getElementById('signup-lastname').value.trim();
-  const email     = document.getElementById('signup-email').value.trim();
-  const phone     = document.getElementById('signup-phone').value.trim();
-  const city      = document.getElementById('signup-city').value;
-  const role      = document.getElementById('signup-role').value;
-  const password  = document.getElementById('signup-password').value;
-  const terms     = document.getElementById('signup-terms').checked;
-
-  if(!firstName || !lastName || !email || !phone || !password){
-    alert('Please fill in all fields!');
-    return;
-  }
-  if(!terms){
-    alert('Please agree to the Terms of Service to continue.');
-    return;
-  }
-  if(password.length < 8){
-    alert('Password must be at least 8 characters.');
-    return;
-  }
-
-  try {
-    const res = await fetch('https://roomsync-fellow-mate.up.railway.app/api/auth/signup', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ firstName, lastName, email, phone, city, role, password })
+  const firstName=document.getElementById('signup-firstname').value.trim();
+  const lastName=document.getElementById('signup-lastname').value.trim();
+  const email=document.getElementById('signup-email').value.trim();
+  const phone=document.getElementById('signup-phone').value.trim();
+  const city=document.getElementById('signup-city').value;
+  const role=document.getElementById('signup-role').value;
+  const password=document.getElementById('signup-password').value;
+  const terms=document.getElementById('signup-terms').checked;
+  if(!firstName||!lastName||!email||!phone||!password){alert('Please fill in all fields!');return;}
+  if(!terms){alert('Please agree to the Terms of Service to continue.');return;}
+  if(password.length<8){alert('Password must be at least 8 characters.');return;}
+  try{
+    const res=await fetch('https://roomsync-fellow-mate.up.railway.app/api/auth/signup',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({firstName,lastName,email,phone,city,role,password})
     });
-    const result = await res.json();
+    const result=await res.json();
     if(res.ok){
-      localStorage.setItem('token', result.token);
-      localStorage.setItem('user', JSON.stringify(result.user));
-      window.location.href = 'quiz.html';
-    } else {
-      alert(result.message);
-    }
-  } catch(err) {
-    localStorage.setItem('user', JSON.stringify({firstName, email, city}));
-    window.location.href = 'quiz.html';
+      localStorage.setItem('token',result.token);
+      localStorage.setItem('user',JSON.stringify(result.user));
+      window.location.href='quiz.html';
+    }else{alert(result.message);}
+  }catch(err){
+    localStorage.setItem('user',JSON.stringify({firstName,email,city}));
+    window.location.href='quiz.html';
   }
 }
 
 async function handleLogin(){
-  const email    = document.getElementById('login-email').value.trim();
-  const password = document.getElementById('login-password').value;
-
-  if(!email || !password){
-    alert('Please enter your email and password!');
-    return;
-  }
-
-  try {
-    const res = await fetch('https://roomsync-fellow-mate.up.railway.app/api/auth/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password })
+  const email=document.getElementById('login-email').value.trim();
+  const password=document.getElementById('login-password').value;
+  if(!email||!password){alert('Please enter your email and password!');return;}
+  try{
+    const res=await fetch('https://roomsync-fellow-mate.up.railway.app/api/auth/login',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({email,password})
     });
-    const result = await res.json();
+    const result=await res.json();
     if(res.ok){
-      localStorage.setItem('token', result.token);
-      localStorage.setItem('user', JSON.stringify(result.user));
-      window.location.href = 'matches.html';
-    } else {
-      alert(result.message);
-    }
-  } catch(err) {
-    localStorage.setItem('user', JSON.stringify({email}));
-    window.location.href = 'matches.html';
+      localStorage.setItem('token',result.token);
+      localStorage.setItem('user',JSON.stringify(result.user));
+      window.location.href='matches.html';
+    }else{alert(result.message);}
+  }catch(err){
+    localStorage.setItem('user',JSON.stringify({email}));
+    window.location.href='matches.html';
   }
 }
 </script>
